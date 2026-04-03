@@ -1,0 +1,25 @@
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const PrivateRoute = ({ children, requiredRole }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="dashboard-container">Loading...</div>; // Could be a slick spinner
+  }
+
+  // If not logged in at all, kick to login
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If a specific role is required (like superadmin) and user doesn't match
+  if (requiredRole && user.role !== requiredRole) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
+export default PrivateRoute;
