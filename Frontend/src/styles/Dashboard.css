@@ -1,0 +1,96 @@
+/* Dashboard Summary Cards */
+.summary-card {
+  background: var(--gradient-income);
+  color: white;
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+}
+
+.summary-card.income {
+  background: var(--gradient-income);
+}
+
+.summary-card.expense {
+  background: var(--gradient-expense);
+}
+
+.summary-card.balance {
+  background: var(--gradient-balance);
+}
+
+.summary-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.summary-card-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.summary-card-amount {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Filter Section */
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.filter-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-select {
+  width: auto;
+  padding: 0.4rem 1rem;
+}
+
+/* Table Actions */
+.table-action-row {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.table-action-btn {
+  padding: 0.35rem 0.5rem;
+}
+
+.table-title-cell {
+  font-weight: 500;
+}
+
+.table-amount-cell {
+  font-weight: 600;
+}
+
+/* Modal Form */
+.modal-form-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+/* Top Action Bar */
+.dashboard-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-action-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}

@@ -131,6 +131,12 @@ h1, h2, h3, h4, h5, h6 {
   background: var(--input-bg);
 }
 
+/* Button Sizes */
+.btn-sm {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.75rem;
+}
+
 /* Forms */
 .form-group {
   margin-bottom: 1rem;

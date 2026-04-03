@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import api from "../api/axios";
 import { Wallet, Search, Edit3, Trash2 } from "lucide-react";
+import "../styles/Dashboard.css";
 
 const AllTransactions = () => {
   const [transactions, setTransactions] = useState([]);
@@ -117,20 +118,13 @@ const AllTransactions = () => {
 
   return (
     <div className="dashboard-container">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "2rem",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+      <div className="dashboard-action-bar mb-2rem">
+        <div className="dashboard-action-title">
           <Wallet size={28} color="#6366f1" />
           <h2>Global Transactions Log</h2>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+        <div className="flex-gap-md">
           <select
             className="form-input"
             style={{ width: "220px", padding: "0.45rem 0.75rem" }}
@@ -191,7 +185,7 @@ const AllTransactions = () => {
                 <th>Type</th>
                 <th>Amount</th>
                 <th>Done By</th>
-                <th style={{ textAlign: "center" }}>Actions</th>
+                <th className="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -199,7 +193,7 @@ const AllTransactions = () => {
                 filteredTransactions.map((t) => (
                   <tr key={t._id || t.id}>
                     <td>{new Date(t.date).toLocaleDateString()}</td>
-                    <td style={{ fontWeight: "500" }}>{t.title}</td>
+                    <td className="table-title-cell">{t.title}</td>
                     <td>{t.category}</td>
                     <td>
                       <span
@@ -208,38 +202,28 @@ const AllTransactions = () => {
                         {t.type}
                       </span>
                     </td>
-                    <td style={{ fontWeight: "600" }}>
+                    <td className="table-amount-cell">
                       ₹{t.amount.toLocaleString()}
                     </td>
-                    <td>
-                      <span style={{ color: "var(--text-secondary)" }}>
-                        {t.doneByName ||
-                          t.user?.name ||
-                          t.User?.name ||
-                          t.Users?.name ||
-                          `User #${t.userId}`}
-                      </span>
+                    <td className="text-secondary">
+                      {t.doneByName ||
+                        t.user?.name ||
+                        t.User?.name ||
+                        t.Users?.name ||
+                        `User #${t.userId}`}
                     </td>
-                    <td style={{ textAlign: "center" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "0.5rem",
-                          justifyContent: "center",
-                        }}
-                      >
+                    <td className="text-center">
+                      <div className="table-action-row">
                         <button
-                          className="btn btn-outline"
-                          style={{ padding: "0.35rem 0.5rem" }}
+                          className="btn btn-outline table-action-btn"
                           onClick={() => handleOpenModal(t)}
                           title="Edit transaction"
                         >
                           <Edit3 size={16} />
                         </button>
                         <button
-                          className="btn btn-outline"
+                          className="btn btn-outline table-action-btn"
                           style={{
-                            padding: "0.35rem 0.5rem",
                             color: "#dc2626",
                             borderColor: "rgba(239, 68, 68, 0.2)",
                           }}
@@ -256,8 +240,8 @@ const AllTransactions = () => {
                 <tr>
                   <td
                     colSpan="7"
+                    className="text-center"
                     style={{
-                      textAlign: "center",
                       padding: "2rem",
                       color: "var(--text-secondary)",
                     }}
@@ -356,7 +340,7 @@ const AllTransactions = () => {
                 />
               </div>
 
-              <div className="form-group" style={{ marginBottom: "1.5rem" }}>
+              <div className="form-group login-form-group">
                 <label className="form-label">Note</label>
                 <input
                   type="text"
@@ -368,13 +352,7 @@ const AllTransactions = () => {
                 />
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  gap: "0.75rem",
-                }}
-              >
+              <div className="modal-form-actions">
                 <button
                   type="button"
                   className="btn btn-outline"

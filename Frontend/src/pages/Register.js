@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [form, setForm] = useState({ username: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -14,9 +15,22 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     try {
-      await axios.post("/auth/register", form);
-      navigate("/login");
+      await axios.post("/auth/register", {
+        name: form.username,
+        email: form.email,
+        password: form.password,
+        role: "admin",
+      });
+      setSuccess(
+        "Registration successful! Your account is pending superadmin approval. You can log in once activated."
+      );
+      setForm({ username: "", email: "", password: "" });
+      // optionally redirect to login after small delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
     }
@@ -57,6 +71,7 @@ const Register = () => {
           />
         </div>
         {error && <div style={{ color: "red" }}>{error}</div>}
+        {success && <div style={{ color: "green" }}>{success}</div>}
         <button type="submit">Register</button>
       </form>
     </div>

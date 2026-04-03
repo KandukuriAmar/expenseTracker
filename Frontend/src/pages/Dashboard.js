@@ -9,6 +9,7 @@ import {
   TrendingDown,
   Filter,
 } from "lucide-react";
+import "../styles/Dashboard.css";
 
 const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
@@ -115,14 +116,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard-container">
       {/* Top Action Bar */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "2rem",
-        }}
-      >
+      <div className="dashboard-action-bar">
         <h2>Transactions</h2>
         <button className="btn btn-primary" onClick={() => handleOpenModal()}>
           <Plus size={18} /> Add Transaction
@@ -130,94 +124,45 @@ const Dashboard = () => {
       </div>
 
       {/* Summary Cards */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-          gap: "1.5rem",
-          marginBottom: "2rem",
-        }}
-      >
+      <div className="grid-auto-fit mb-2rem">
         <div
-          className="card"
-          style={{ background: "var(--gradient-income)", color: "white" }}
+          className="card summary-card income"
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1rem",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "1rem",
-                fontWeight: "500",
-                color: "rgba(255,255,255,0.9)",
-              }}
-            >
+          <div className="summary-card-header">
+            <h3 className="summary-card-title">
               Total Income
             </h3>
             <TrendingUp size={24} color="rgba(255,255,255,0.8)" />
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: "bold" }}>
+          <div className="summary-card-amount">
             ₹{summary.income?.toLocaleString() || 0}
           </div>
         </div>
 
         <div
-          className="card"
-          style={{ background: "var(--gradient-expense)", color: "white" }}
+          className="card summary-card expense"
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1rem",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "1rem",
-                fontWeight: "500",
-                color: "rgba(255,255,255,0.9)",
-              }}
-            >
+          <div className="summary-card-header">
+            <h3 className="summary-card-title">
               Total Expense
             </h3>
             <TrendingDown size={24} color="rgba(255,255,255,0.8)" />
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: "bold" }}>
+          <div className="summary-card-amount">
             ₹{summary.expense?.toLocaleString() || 0}
           </div>
         </div>
 
         <div
-          className="card"
-          style={{ background: "var(--gradient-balance)", color: "white" }}
+          className="card summary-card balance"
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1rem",
-            }}
-          >
-            <h3
-              style={{
-                fontSize: "1rem",
-                fontWeight: "500",
-                color: "rgba(255,255,255,0.9)",
-              }}
-            >
+          <div className="summary-card-header">
+            <h3 className="summary-card-title">
               Balance
             </h3>
             <IndianRupee size={24} color="rgba(255,255,255,0.8)" />
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: "bold" }}>
+          <div className="summary-card-amount">
             ₹{summary.balance?.toLocaleString() || 0}
           </div>
         </div>
@@ -228,20 +173,12 @@ const Dashboard = () => {
         className="glass-panel"
         style={{ padding: "1.5rem", overflow: "hidden" }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1.5rem",
-          }}
-        >
-          <h3 style={{ fontSize: "1.25rem" }}>Recent History</h3>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <div className="filter-container">
+          <h3 className="text-lg">Recent History</h3>
+          <div className="filter-section">
             <Filter size={18} color="var(--text-secondary)" />
             <select
-              className="form-input"
-              style={{ width: "auto", padding: "0.4rem 1rem" }}
+              className="form-input filter-select"
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
             >
@@ -261,7 +198,7 @@ const Dashboard = () => {
                 <th>Category</th>
                 <th>Type</th>
                 <th>Amount</th>
-                <th style={{ textAlign: "center" }}>Actions</th>
+                <th className="text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -269,7 +206,7 @@ const Dashboard = () => {
                 transactions.map((t) => (
                   <tr key={t._id || t.id}>
                     <td>{new Date(t.date).toLocaleDateString()}</td>
-                    <td style={{ fontWeight: "500" }}>{t.title}</td>
+                    <td className="table-title-cell">{t.title}</td>
                     <td>{t.category}</td>
                     <td>
                       <span
@@ -278,28 +215,20 @@ const Dashboard = () => {
                         {t.type}
                       </span>
                     </td>
-                    <td style={{ fontWeight: "600" }}>
+                    <td className="table-amount-cell">
                       ₹{t.amount.toLocaleString()}
                     </td>
-                    <td style={{ textAlign: "center" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "0.5rem",
-                          justifyContent: "center",
-                        }}
-                      >
+                    <td className="text-center">
+                      <div className="table-action-row">
                         <button
-                          className="btn btn-outline"
-                          style={{ padding: "0.35rem 0.5rem" }}
+                          className="btn btn-outline table-action-btn"
                           onClick={() => handleOpenModal(t)}
                         >
                           <Edit2 size={16} />
                         </button>
                         <button
-                          className="btn btn-outline"
+                          className="btn btn-outline table-action-btn"
                           style={{
-                            padding: "0.35rem 0.5rem",
                             color: "#dc2626",
                             borderColor: "rgba(239, 68, 68, 0.2)",
                           }}
@@ -315,8 +244,8 @@ const Dashboard = () => {
                 <tr>
                   <td
                     colSpan="6"
+                    className="text-center"
                     style={{
-                      textAlign: "center",
                       padding: "2rem",
                       color: "var(--text-secondary)",
                     }}
@@ -447,7 +376,7 @@ const Dashboard = () => {
                 </div>
               </div>
 
-              <div className="form-group" style={{ marginBottom: "2rem" }}>
+              <div className="form-group login-form-group">
                 <label className="form-label" htmlFor="note">
                   Note (Optional)
                 </label>
@@ -463,13 +392,7 @@ const Dashboard = () => {
                 />
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  gap: "1rem",
-                  justifyContent: "flex-end",
-                }}
-              >
+              <div className="modal-form-actions">
                 <button
                   type="button"
                   className="btn btn-outline"

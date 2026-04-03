@@ -9,6 +9,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
+import "./styles/utilities.css";
 // Pages
 
 import Login from "./pages/Login";
@@ -37,15 +38,9 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100vh",
-          }}
-        >
+        <div className="app-container">
           <Navbar />
-          <main style={{ flex: 1, padding: "1rem" }}>
+          <main className="app-main">
             <Routes>
               {/* Public routes */}
               <Route path="/login" element={<Login />} />

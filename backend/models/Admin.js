@@ -21,7 +21,7 @@ const Users = sequelize.define("Users", {
         defaultValue: "admin"
     }, isActive: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true
+        defaultValue: false
     }
 }, {
     timestamps: true

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../api/axios";
 import { UserPlus, Edit3, Trash2, Power } from "lucide-react";
+import "../styles/AdminPanel.css";
 
 const AdminPanel = () => {
   const [users, setUsers] = useState([]);
@@ -74,15 +75,8 @@ const AdminPanel = () => {
 
   return (
     <div className="dashboard-container">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "2rem",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+      <div className="admin-header">
+        <div className="admin-title-section">
           <h2>Admin Workspace</h2>
         </div>
         <button className="btn btn-primary" onClick={() => handleOpenModal()}>
@@ -91,10 +85,9 @@ const AdminPanel = () => {
       </div>
 
       <div
-        className="glass-panel"
-        style={{ padding: "1.5rem", overflow: "hidden" }}
+        className="glass-panel admin-table-container"
       >
-        <h3 style={{ fontSize: "1.25rem", marginBottom: "1.5rem" }}>
+        <h3 className="admin-table-title">
           All Admin Accounts
         </h3>
         <div className="table-wrapper">
@@ -105,7 +98,7 @@ const AdminPanel = () => {
                 <th>Email</th>
                 <th>Status</th>
                 <th>Created At</th>
-                <th style={{ textAlign: "center" }}>Actions</th>
+                <th className="admin-table-actions-center">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -115,21 +108,21 @@ const AdminPanel = () => {
                   <td>{user.email}</td>
                   <td>{user.isActive ? "Active" : "Suspended"}</td>
                   <td>{new Date(user.createdAt).toLocaleString()}</td>
-                  <td style={{ textAlign: "center" }}>
+                  <td className="admin-table-actions-center">
                     <button
-                      className="btn btn-sm"
+                      className="btn btn-sm admin-button-small"
                       onClick={() => handleOpenModal(user)}
                     >
                       <Edit3 size={16} />
                     </button>
                     <button
-                      className="btn btn-sm"
+                      className="btn btn-sm admin-button-small"
                       onClick={() => handleToggleActive(user.id || user._id)}
                     >
                       <Power size={16} />
                     </button>
                     <button
-                      className="btn btn-sm btn-danger"
+                      className="btn btn-sm btn-danger admin-button-small"
                       onClick={() => handleDelete(user.id || user._id)}
                     >
                       <Trash2 size={16} />
@@ -174,7 +167,7 @@ const AdminPanel = () => {
                 }
                 required={!editingId}
               />
-              <div style={{ marginTop: "1rem", display: "flex", gap: "1rem" }}>
+              <div className="admin-modal-form-actions">
                 <button className="btn btn-primary" type="submit">
                   Save
                 </button>

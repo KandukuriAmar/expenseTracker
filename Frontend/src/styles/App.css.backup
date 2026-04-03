@@ -1,0 +1,11 @@
+/* Backup of original App structure styles */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  padding: 1rem;
+}

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Moon, Sun, Wallet } from "lucide-react";
+import "../styles/Navbar.css";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -23,29 +24,10 @@ const Navbar = () => {
     navigate("/login");
   };
 
-  // If not logged in, don't show the main navbar controls (except maybe logo and theme toggle)
   if (!user) {
     return (
-      <nav
-        className="glass-panel"
-        style={{
-          margin: "1rem",
-          padding: "1rem 2rem",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            fontWeight: "bold",
-            fontSize: "1.25rem",
-            color: "var(--gradient-primary)",
-          }}
-        >
+      <nav className="glass-panel navbar-guest">
+        <div className="navbar-logo-text">
           <Wallet size={28} />
           Expense-Tracker
         </div>
@@ -57,36 +39,15 @@ const Navbar = () => {
   }
 
   return (
-    <nav
-      className="glass-panel"
-      style={{
-        margin: "1rem",
-        padding: "1rem 2rem",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-      }}
-    >
-      <Link
-        to="/"
-        style={{
-          textDecoration: "none",
-          display: "flex",
-          alignItems: "center",
-          gap: "0.5rem",
-          fontWeight: "bold",
-          fontSize: "1.25rem",
-          color: "var(--text-primary)",
-        }}
-      >
+    <nav className="glass-panel navbar-container">
+      <Link to="/" className="navbar-brand">
         <span>Expense-Tracker</span>
       </Link>
 
-      <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        {/* Navigation Links based on Role */}
+      <div className="navbar-nav">
         <Link
           to="/"
-          className={`btn btn-outline ${location.pathname === "/" ? "active-link" : ""}`}
+          className={`btn btn-outline navbar-link ${location.pathname === "/" ? "active-link" : ""}`}
           style={
             location.pathname === "/"
               ? { background: "var(--input-bg)" }
@@ -100,7 +61,7 @@ const Navbar = () => {
           <>
             <Link
               to="/superadmin"
-              className={`btn btn-outline`}
+              className="btn btn-outline navbar-link"
               style={
                 location.pathname === "/superadmin"
                   ? { background: "var(--input-bg)" }
@@ -111,7 +72,7 @@ const Navbar = () => {
             </Link>
             <Link
               to="/all-transactions"
-              className={`btn btn-outline`}
+              className="btn btn-outline navbar-link"
               style={
                 location.pathname === "/all-transactions"
                   ? { background: "var(--input-bg)" }
@@ -124,12 +85,8 @@ const Navbar = () => {
         )}
       </div>
 
-      <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-        <button
-          className="btn btn-outline"
-          onClick={toggleTheme}
-          style={{ padding: "0.5rem 0.75rem" }}
-        >
+      <div className="navbar-nav">
+        <button className="btn btn-outline navbar-theme-btn" onClick={toggleTheme}>
           {theme === "light" ? (
             <>
               <Moon size={16} /> Light
@@ -141,25 +98,9 @@ const Navbar = () => {
           )}
         </button>
 
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            backgroundColor: "var(--input-bg)",
-            padding: "0.5rem 1rem",
-            borderRadius: "var(--radius-sm)",
-          }}
-        >
-          <span style={{ fontSize: "0.875rem", fontWeight: "500" }}>
-            {user.name}
-          </span>
-          <span
-            className="badge badge-active"
-            style={{ marginLeft: "0.5rem", fontSize: "0.65rem" }}
-          >
-            {user.role}
-          </span>
+        <div className="navbar-user-info">
+          <span className="navbar-username">{user.name}</span>
+          <span className="badge badge-active navbar-role-badge">{user.role}</span>
         </div>
 
         <button className="btn btn-danger" onClick={handleLogout}>

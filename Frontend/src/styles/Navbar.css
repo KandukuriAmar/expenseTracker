@@ -1,0 +1,73 @@
+/* Navbar */
+.navbar-container {
+  margin: 1rem;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.navbar-logo-text {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+  font-size: 1.25rem;
+  color: var(--gradient-primary);
+}
+
+.navbar-nav {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.navbar-link {
+  text-decoration: none;
+}
+
+.navbar-link.active-link {
+  background: var(--input-bg);
+}
+
+.navbar-theme-btn {
+  padding: 0.5rem 0.75rem;
+}
+
+.navbar-user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--input-bg);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+}
+
+.navbar-username {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.navbar-role-badge {
+  margin-left: 0.5rem;
+  font-size: 0.65rem;
+}
+
+/* Navbar non-authenticated state */
+.navbar-guest {
+  margin: 1rem;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

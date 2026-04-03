@@ -1,0 +1,144 @@
+/* Layout Utilities */
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.flex-gap-sm {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.flex-gap-md {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Spacing */
+.mb-2rem {
+  margin-bottom: 2rem;
+}
+
+.mb-1-5rem {
+  margin-bottom: 1.5rem;
+}
+
+.mb-1rem {
+  margin-bottom: 1rem;
+}
+
+.ml-0-5rem {
+  margin-left: 0.5rem;
+}
+
+.p-1rem {
+  padding: 1rem;
+}
+
+.p-1-5rem {
+  padding: 1.5rem;
+}
+
+.p-2-5rem {
+  padding: 2.5rem;
+}
+
+/* Typography */
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-md {
+  font-size: 1rem;
+}
+
+.text-lg {
+  font-size: 1.25rem;
+}
+
+.text-xl {
+  font-size: 1.5rem;
+}
+
+.text-2xl {
+  font-size: 2rem;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.font-600 {
+  font-weight: 600;
+}
+
+.font-500 {
+  font-weight: 500;
+}
+
+/* Layout */
+.min-height-80vh {
+  min-height: 80vh;
+}
+
+.min-height-100vh {
+  min-height: 100vh;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.width-full {
+  width: 100%;
+}
+
+.max-width-400 {
+  max-width: 400px;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+/* Grid */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Actions Row */
+.form-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}

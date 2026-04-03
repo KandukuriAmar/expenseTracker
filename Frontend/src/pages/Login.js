@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Wallet, LogIn, AlertCircle } from "lucide-react";
+import "../styles/Login.css";
 
 const Login = () => {
   const { user, login } = useAuth();
@@ -33,59 +34,25 @@ const Login = () => {
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "80vh",
-      }}
-    >
-      <div
-        className="card glass-panel"
-        style={{ width: "100%", maxWidth: "400px", padding: "2.5rem" }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginBottom: "2rem",
-          }}
-        >
-          <div
-            style={{
-              background: "var(--gradient-primary)",
-              padding: "1rem",
-              borderRadius: "50%",
-              color: "white",
-              marginBottom: "1rem",
-            }}
-          >
+    <div className="login-container">
+      <div className="login-card card glass-panel">
+        <div className="login-header">
+          <div className="login-icon">
             <Wallet size={36} />
           </div>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>
+          <h2 className="login-title">
             Welcome to Expense-Tracker
           </h2>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem" }}>
+          <p className="login-subtitle">
             Sign in to manage your expenses
+          </p>
+          <p className="text-sm" style={{ marginTop: "0.5rem" }}>
+            New here? <a href="/register">Register</a>. Your account will require superadmin approval before you can log in.
           </p>
         </div>
 
         {error && (
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "0.5rem",
-              backgroundColor: "rgba(239, 68, 68, 0.1)",
-              color: "#dc2626",
-              padding: "0.75rem",
-              borderRadius: "var(--radius-sm)",
-              marginBottom: "1.5rem",
-              fontSize: "0.875rem",
-            }}
-          >
+          <div className="login-error">
             <AlertCircle size={18} />
             <span>{error}</span>
           </div>
@@ -107,7 +74,7 @@ const Login = () => {
             />
           </div>
 
-          <div className="form-group" style={{ marginBottom: "2rem" }}>
+          <div className="form-group login-form-group">
             <label className="form-label" htmlFor="password">
               Password
             </label>
@@ -124,8 +91,7 @@ const Login = () => {
 
           <button
             type="submit"
-            className="btn btn-primary"
-            style={{ width: "100%", padding: "0.75rem", fontSize: "1rem" }}
+            className="btn btn-primary login-submit-btn"
             disabled={loading}
           >
             {loading ? (

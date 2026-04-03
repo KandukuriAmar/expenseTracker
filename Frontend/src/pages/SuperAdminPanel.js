@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import api from "../api/axios";
 import { UserPlus, Shield, Trash2, Power, Edit3 } from "lucide-react";
+import "../styles/AdminPanel.css";
 
 const SuperAdminPanel = () => {
   const [admins, setAdmins] = useState([]);
@@ -83,15 +84,8 @@ const SuperAdminPanel = () => {
 
   return (
     <div className="dashboard-container">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "2rem",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+      <div className="admin-header">
+        <div className="admin-title-section">
           <Shield size={28} color="var(--gradient-primary)" />
           <h2>SuperAdmin Workspace</h2>
         </div>
@@ -101,10 +95,9 @@ const SuperAdminPanel = () => {
       </div>
 
       <div
-        className="glass-panel"
-        style={{ padding: "1.5rem", overflow: "hidden" }}
+        className="glass-panel admin-table-container"
       >
-        <h3 style={{ fontSize: "1.25rem", marginBottom: "1.5rem" }}>
+        <h3 className="admin-table-title">
           All Admin Accounts
         </h3>
         <div className="table-wrapper">
@@ -115,14 +108,14 @@ const SuperAdminPanel = () => {
                 <th>Email</th>
                 <th>Status</th>
                 <th>Created At</th>
-                <th style={{ textAlign: "center" }}>Actions</th>
+                <th className="admin-table-actions-center">Actions</th>
               </tr>
             </thead>
             <tbody>
               {admins.length > 0 ? (
                 admins.map((admin) => (
                   <tr key={admin._id || admin.id}>
-                    <td style={{ fontWeight: "500" }}>{admin.name}</td>
+                    <td className="table-title-cell">{admin.name}</td>
                     <td>{admin.email}</td>
                     <td>
                       <span
@@ -132,19 +125,12 @@ const SuperAdminPanel = () => {
                       </span>
                     </td>
                     <td>{new Date(admin.createdAt).toLocaleDateString()}</td>
-                    <td style={{ textAlign: "center" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "0.5rem",
-                          justifyContent: "center",
-                        }}
-                      >
+                    <td className="admin-table-actions-center">
+                      <div className="table-action-row">
                         {admin.role !== "superadmin" && (
                           <>
                             <button
-                              className="btn btn-outline"
-                              style={{ padding: "0.35rem 0.5rem" }}
+                              className="btn btn-outline admin-button-small"
                               onClick={() =>
                                 handleToggleActive(admin._id || admin.id)
                               }
@@ -156,16 +142,14 @@ const SuperAdminPanel = () => {
                               />
                             </button>
                             <button
-                              className="btn btn-outline"
-                              style={{ padding: "0.35rem 0.5rem" }}
+                              className="btn btn-outline admin-button-small"
                               onClick={() => handleOpenModal(admin)}
                             >
                               <Edit3 size={16} />
                             </button>
                             <button
-                              className="btn btn-outline"
+                              className="btn btn-outline admin-button-small"
                               style={{
-                                padding: "0.35rem 0.5rem",
                                 color: "#dc2626",
                                 borderColor: "rgba(239, 68, 68, 0.2)",
                               }}
@@ -178,9 +162,8 @@ const SuperAdminPanel = () => {
                           </>
                         )}
                         {admin.role === "superadmin" && (
-                          <span
+                          <span className="text-sm"
                             style={{
-                              fontSize: "0.75rem",
                               color: "var(--text-secondary)",
                             }}
                           >
@@ -195,8 +178,8 @@ const SuperAdminPanel = () => {
                 <tr>
                   <td
                     colSpan="5"
+                    className="text-center"
                     style={{
-                      textAlign: "center",
                       padding: "2rem",
                       color: "var(--text-secondary)",
                     }}
@@ -261,7 +244,7 @@ const SuperAdminPanel = () => {
                 />
               </div>
 
-              <div className="form-group" style={{ marginBottom: "2rem" }}>
+              <div className="form-group login-form-group">
                 <label className="form-label" htmlFor="password">
                   Password{" "}
                   {editingId && (
@@ -284,13 +267,7 @@ const SuperAdminPanel = () => {
                 />
               </div>
 
-              <div
-                style={{
-                  display: "flex",
-                  gap: "1rem",
-                  justifyContent: "flex-end",
-                }}
-              >
+              <div className="modal-form-actions">
                 <button
                   type="button"
                   className="btn btn-outline"

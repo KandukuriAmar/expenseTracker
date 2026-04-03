@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/axios";
 import { Users, UserCheck, ReceiptText } from "lucide-react";
+import "../styles/Dashboard.css";
 
 const SuperAdminDashboard = () => {
   const [admins, setAdmins] = useState([]);
@@ -51,45 +52,25 @@ const SuperAdminDashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <div className="dashboard-action-bar mb-1-5rem">
         <h2>Superadmin Dashboard</h2>
         <Link to="/superadmin" className="btn btn-outline">
           Manage Admins
         </Link>
       </div>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
-          gap: "1rem",
-          marginBottom: "1.5rem",
-        }}
-      >
+      <div className="grid-auto-fit mb-1-5rem">
         <div
           className="card"
           style={{ background: "var(--gradient-primary)", color: "white" }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3 style={{ fontSize: "1rem", color: "rgba(255,255,255,0.9)" }}>
+          <div className="summary-card-header">
+            <h3 className="summary-card-title">
               Total Admins
             </h3>
             <Users size={22} color="rgba(255,255,255,0.9)" />
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: 700 }}>
+          <div className="summary-card-amount">
             {admins.length}
           </div>
         </div>
@@ -98,19 +79,13 @@ const SuperAdminDashboard = () => {
           className="card"
           style={{ background: "var(--gradient-income)", color: "white" }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3 style={{ fontSize: "1rem", color: "rgba(255,255,255,0.9)" }}>
+          <div className="summary-card-header">
+            <h3 className="summary-card-title">
               Active Admins
             </h3>
             <UserCheck size={22} color="rgba(255,255,255,0.9)" />
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: 700 }}>
+          <div className="summary-card-amount">
             {activeAdminsCount}
           </div>
         </div>
@@ -119,19 +94,13 @@ const SuperAdminDashboard = () => {
           className="card"
           style={{ background: "var(--gradient-expense)", color: "white" }}
         >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <h3 style={{ fontSize: "1rem", color: "rgba(255,255,255,0.9)" }}>
+          <div className="summary-card-header">
+            <h3 className="summary-card-title">
               Total Transactions
             </h3>
             <ReceiptText size={22} color="rgba(255,255,255,0.9)" />
           </div>
-          <div style={{ fontSize: "2rem", fontWeight: 700 }}>
+          <div className="summary-card-amount">
             {totalTransactionsCount}
           </div>
         </div>
@@ -141,15 +110,8 @@ const SuperAdminDashboard = () => {
         className="glass-panel"
         style={{ padding: "1.25rem", overflow: "hidden" }}
       >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1rem",
-          }}
-        >
-          <h3 style={{ fontSize: "1.1rem" }}>Recent Transactions</h3>
+        <div className="filter-container mb-1rem">
+          <h3 className="text-md">Recent Transactions</h3>
           <Link to="/all-transactions" className="btn btn-outline">
             View All Transactions
           </Link>
@@ -172,7 +134,7 @@ const SuperAdminDashboard = () => {
                 recentTransactions.map((txn) => (
                   <tr key={txn.id || txn._id}>
                     <td>{new Date(txn.date).toLocaleDateString()}</td>
-                    <td style={{ fontWeight: "600" }}>{txn.title}</td>
+                    <td className="table-title-cell">{txn.title}</td>
                     <td>{txn.category}</td>
                     <td>
                       <span
@@ -195,7 +157,8 @@ const SuperAdminDashboard = () => {
                 <tr>
                   <td
                     colSpan="6"
-                    style={{ textAlign: "center", padding: "2rem" }}
+                    className="text-center"
+                    style={{ padding: "2rem" }}
                   >
                     No recent transactions found.
                   </td>
