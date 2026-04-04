@@ -10,7 +10,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Initialize app: check if token exists and validate
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -30,7 +29,6 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    // Listen to unauthorized events from Axios to clear state
     const handleUnauthorized = () => {
       setUser(null);
       localStorage.removeItem("token");
@@ -42,14 +40,12 @@ export const AuthProvider = ({ children }) => {
       window.removeEventListener("jwt-unauthorized", handleUnauthorized);
   }, []);
 
-  // Login handler
   const login = async (email, password) => {
     try {
       const res = await api.post("/auth/login", { email, password });
       const { token } = res.data;
       if (token) {
         localStorage.setItem("token", token);
-        // After setting token, Axios interceptor will attach it
         const meRes = await api.get("/auth/me");
         setUser(meRes.data?.user || null);
         return true;
@@ -61,10 +57,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout handler
   const logout = async () => {
     try {
-      // Assuming a backend logout endpoint exists as per doc: POST /api/auth/logout
       await api.post("/auth/logout");
     } catch (e) {
       console.error(e);

@@ -6,15 +6,13 @@ const PrivateRoute = ({ children, requiredRole }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <div className="dashboard-container">Loading...</div>; // Could be a slick spinner
+    return <div className="dashboard-container">Loading...</div>;
   }
 
-  // If not logged in at all, kick to login
   if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  // If a specific role is required (like superadmin) and user doesn't match
   if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/" replace />;
   }

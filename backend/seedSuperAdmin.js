@@ -1,34 +1,43 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import bcrypt from "bcrypt";
 import { sequelize } from "./db/DBConfig.js";
 import Users from "./models/Admin.js";
 
-async function seedSuperAdmin() {
-  await sequelize.sync();
-  const email = "super93@gmail.com";
-  const password = "Super@9393";
-  const name = "Super Admin";
-  const role = "superadmin";
+export default async function seedSuperAdmin() {
+  try {
+    await sequelize.sync();
 
-  // Check if superadmin already exists
-  const existing = await Users.findOne({ where: { email } });
-  if (existing) {
-    console.log("Superadmin already exists.");
-    process.exit(0);
+    const email = process.env.seedemail;
+    const password = process.env.seedpassword;
+    const name = process.env.seedname;
+    const role = "superadmin";
+
+    if (!email || !password || !name) {
+      throw new Error("Missing required environment variables");
+    }
+
+    const existing = await Users.findOne({ where: { email } });
+
+    if (existing) {
+      console.log("Superadmin already exists.");
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await Users.create({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      isActive: true,
+    });
+
+    console.log("Superadmin seeded successfully.");
+  } catch (error) {
+    console.error("Seeding failed:", error.message);
+    throw error;
   }
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-  await Users.create({
-    name,
-    email,
-    password: hashedPassword,
-    role,
-    isActive: true,
-  });
-  console.log("Superadmin seeded successfully.");
-  process.exit(0);
 }
-
-seedSuperAdmin().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});

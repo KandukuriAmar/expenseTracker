@@ -16,7 +16,6 @@ const AdminPanel = () => {
   const fetchUsers = async () => {
     try {
       const res = await api.get("/users");
-      // Only show regular admins
       setUsers(res.data.filter((u) => u.role === "admin"));
     } catch (err) {
       setUsers([]);

@@ -9,6 +9,7 @@ import userRouter from './Routes/userRouter.js';
 import transactionRouter from './Routes/transactionRouter.js';
 import cookieParser from 'cookie-parser';
 import corsMiddleware from './middlewares/cors.js';
+import seedSuperAdmin from './seedSuperAdmin.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(corsMiddleware);
   try {
     await connectDB();
     await sequelize.sync({ alter: true });
+    seedSuperAdmin();
     console.log("Database synced successfully.");
   } catch (error) {
     console.error("Error syncing database:", error);
