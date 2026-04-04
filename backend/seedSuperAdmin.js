@@ -9,9 +9,9 @@ export default async function seedSuperAdmin() {
   try {
     await sequelize.sync();
 
-    const email = "super93@gmail.com";
-    const password = "Super@9393";
-    const name = "Super Admin";
+    const email = process.env.seedemail ;
+    const password = process.env.seedpassword ;
+    const name = process.env.seedname;
     const role = "superadmin";
 
     if (!email || !password || !name) {
