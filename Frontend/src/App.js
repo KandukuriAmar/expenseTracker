@@ -10,8 +10,6 @@ import { useAuth } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
 import "./styles/utilities.css";
-// Pages
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -42,11 +40,8 @@ function App() {
           <Navbar />
           <main className="app-main">
             <Routes>
-              {/* Public routes */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-
-              {/* Protected Routes */}
 
               <Route
                 path="/"
@@ -75,7 +70,6 @@ function App() {
                 }
               />
 
-              {/* Fallback */}
               <Route path="*" element={<FallbackRoute />} />
             </Routes>
           </main>

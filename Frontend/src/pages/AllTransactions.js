@@ -20,53 +20,36 @@ const AllTransactions = () => {
   });
   const [filter, setFilter] = useState("");
 
-  useEffect(() => {
-    const applyFilter = async () => {
+  const applyFilter = async () => {
       try {
-        const transactionres = await api.get(`/transactions?type=${filter.toLowerCase()}`);
-        setTransactions(transactionres.data.transactions || []); 
+        let url = "/transactions?";
+        
+        if (filter) {
+          url += `type=${filter.toLowerCase()}&`;
+          console.log("Applying filter for type:", url);
+        } if (selectedUserId) {
+          url += `userId=${selectedUserId}`;
+          console.log("Applying filter for type:", url);
+        }
+        const res = await api.get(url);
+        console.log("Applying filter for type:", url);
+        setTransactions(res.data.transactions || []);
       } catch (err) {
         console.error("Error applying filter", err);
       }
     };
+  useEffect(() => {
     applyFilter();
-  }, [filter])
-
-  const fetchTransactions = useCallback(async () => {
-    try {
-      const endpoint = selectedUserId
-        ? `/transactions?userId=${selectedUserId}`
-        : "/transactions";
-      const res = await api.get(endpoint);
-      const normalized = Array.isArray(res.data)
-        ? res.data
-        : Array.isArray(res.data?.transactions)
-          ? res.data.transactions
-          : [];
-      setTransactions(normalized);
-    } catch (err) {
-      console.error("Error fetching global transactions", err);
-      setTransactions([]);
-    }
-  }, [selectedUserId]);
+  }, [filter, selectedUserId]);
 
   const fetchAdmins = useCallback(async () => {
     try {
       const res = await api.get("/users");
-      const users = Array.isArray(res.data)
-        ? res.data
-        : Array.isArray(res.data?.users)
-          ? res.data.users
-          : [];
-      setAdmins(users);
+      setAdmins(res.data.users);
     } catch (err) {
       setAdmins([]);
     }
   }, []);
-
-  useEffect(() => {
-    fetchTransactions();
-  }, [fetchTransactions]);
 
   useEffect(() => {
     fetchAdmins();
@@ -93,7 +76,7 @@ const AllTransactions = () => {
     }
     try {
       await api.delete(`/transactions/${id}`);
-      fetchTransactions();
+      applyFilter();
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete transaction");
     }
@@ -111,7 +94,7 @@ const AllTransactions = () => {
       });
       setShowModal(false);
       setEditingId(null);
-      fetchTransactions();
+      applyFilter();
     } catch (err) {
       alert(err.response?.data?.message || "Failed to update transaction");
     }

@@ -5,105 +5,68 @@ import Users from "../models/Admin.js";
 const getAllTransactionsorfilterByType = async (req, res) => {
   try {
     const type = req.query.type;
-    const userIdQuery = req.query.userId;
-    const limitQuery = Number(req.query.limit);
+    const useridByQuery = req.query.userId;
     const userId = req.user.id;
-    const isSuperadmin = req.user.role === "superadmin";
-    const limit =
-      Number.isFinite(limitQuery) && limitQuery > 0
-        ? Math.min(limitQuery, 100)
-        : null;
+    const role = req.user.role;
+    console.log("came to get transactions with query: ", type, useridByQuery);
+    
+    let transactions;
 
-    const where = isSuperadmin ? {} : { userId };
-    if (isSuperadmin && userIdQuery) {
-      where.userId = Number(userIdQuery);
+    if (role === "superadmin") {
+      if (type && useridByQuery) {
+        transactions = await Transactions.findAll({ where: { type, userId: Number(useridByQuery) }, include: [{ model: Users, attributes: ["name"]}]});
+      } else if (type) {
+        transactions = await Transactions.findAll({ where: { type }, include: [{ model: Users, attributes: ["name"]}]});
+      } else if (useridByQuery) {
+        transactions = await Transactions.findAll({ where: { userId: Number(useridByQuery) }, include: [{ model: Users, attributes: ["name"]}]});
+      } else {
+        transactions = await Transactions.findAll({ include: [{ model: Users, attributes: ["name"]}]});
+      }
+      return res.status(200).json({
+        message: "Transactions fetched successfully",
+        transactions,
+      });
     }
+
     if (type) {
-      where.type = type;
+      transactions = await Transactions.findAll({where: { type, userId }});
+    } else {
+      transactions = await Transactions.findAll({where: { userId }});
     }
-
-    const findOptions = {
-      where,
-      order: [
-        ["date", "DESC"],
-        ["createdAt", "DESC"],
-      ],
-    };
-
-    if (isSuperadmin) {
-      findOptions.include = [
-        {
-          model: Users,
-          attributes: ["id", "name", "email"],
-        },
-      ];
-    }
-
-    if (limit) {
-      findOptions.limit = limit;
-    }
-
-    const [transactions, totalCount] = await Promise.all([
-      Transactions.findAll(findOptions),
-      Transactions.count({ where }),
-    ]);
 
     return res.status(200).json({
-      message: type
-        ? "Transactions filtered successfully"
-        : "Transactions fetched successfully",
+      message: "Transactions fetched successfully",
       transactions,
-      totalCount,
     });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error: ", err });
-  }
-};
 
-const filterByType = async (req, res) => {
-  try {
-    const type = req.query.type;
-    if (req.user.role === "superadmin") {
-      const transactions = await Transactions.findAll({ where: { type } });
-      return res
-        .status(200)
-        .json({ message: "Transactions filtered successfully", transactions });
-    }
-    const transactions = await Transactions.findAll({
-      where: { type, userId: req.user.id },
-    });
-    res
-      .status(200)
-      .json({ message: "Transactions filtered successfully", transactions });
   } catch (err) {
-    res.status(500).json({ message: "Internal server error: ", err });
+    console.error(err);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
 };
 
 const getTransactionSummary = async (req, res) => {
   try {
-    const isSuperadmin = req.user.role === "superadmin";
-    const userIdQuery = req.query.userId;
-    const scope = isSuperadmin ? {} : { userId: req.user.id };
-    if (isSuperadmin && userIdQuery) {
-      scope.userId = Number(userIdQuery);
+        const userId = req.user.id;
+        if(req.user.role === "superadmin") {
+            const totalIncome = await Transactions.sum('amount', {where: {type: 'income'}});
+            const totalExpense = await Transactions.sum('amount', {where: {type: 'expense'}});
+            const balance = totalIncome - totalExpense;
+            return res.status(200).json({message: "Transaction summary fetched successfully", summary: {totalIncome, totalExpense, balance}});
+        }
+        const transactions = await Transactions.findAll({where: {userId}});
+        if(transactions.length === 0) {
+            return res.status(404).json({message: "No transactions found for this user"});
+        }
+        const totalIncome = await Transactions.sum('amount', {where: {type: 'income', userId}});
+        const totalExpense = await Transactions.sum('amount', {where: {type: 'expense', userId}});
+        const balance = totalIncome - totalExpense;
+        res.status(200).json({message: "Transaction summary fetched successfully", summary: {totalIncome, totalExpense, balance}});
+    } catch(err) {
+        res.status(500).json({message: "Internal server error: ", err});
     }
-    const totalIncome = await Transactions.sum("amount", {
-      where: { ...scope, type: { [Op.in]: ["income", "Income"] } },
-    });
-    const totalExpense = await Transactions.sum("amount", {
-      where: { ...scope, type: { [Op.in]: ["expense", "Expense"] } },
-    });
-    const incomeValue = Number(totalIncome || 0);
-    const expenseValue = Number(totalExpense || 0);
-    const balance = incomeValue - expenseValue;
-    res.status(200).json({
-      message: "Transaction summary fetched successfully",
-      summary: { totalIncome, totalExpense, balance },
-    });
-  } catch (err) {
-    res.status(500).json({ message: "Internal server error: ", err });
-  }
 };
 
 const createTransaction = async (req, res) => {
@@ -200,7 +163,6 @@ const getTransactionSummaryById = async (req, res) => {
 export {
   getAllTransactionsorfilterByType,
   getTransactionSummaryById,
-  filterByType,
   getTransactionSummary,
   createTransaction,
   updateTransaction,

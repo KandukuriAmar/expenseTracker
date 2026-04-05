@@ -12,23 +12,9 @@ const SuperAdminDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [usersRes, transactionsRes] = await Promise.all([
-          api.get("/users"),
-          api.get("/transactions?limit=5"),
-        ]);
-
-        const users = Array.isArray(usersRes.data)
-          ? usersRes.data
-          : Array.isArray(usersRes.data?.users)
-            ? usersRes.data.users
-            : [];
-
-        const allTransactions = Array.isArray(transactionsRes.data)
-          ? transactionsRes.data
-          : Array.isArray(transactionsRes.data?.transactions)
-            ? transactionsRes.data.transactions
-            : [];
-        const totalCount = Number(transactionsRes.data?.totalCount || 0);
+        const users = await api.get("/users").then((res) => res.data.users);
+        const allTransactions = await api.get("/transactions").then((res) => res.data.transactions);
+        const totalCount = allTransactions.length;
 
         setAdmins(users);
         setTransactions(allTransactions);

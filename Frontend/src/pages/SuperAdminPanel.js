@@ -8,7 +8,6 @@ const SuperAdminPanel = () => {
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  // New Admin Form Data
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,12 +17,7 @@ const SuperAdminPanel = () => {
   const fetchAdmins = async () => {
     try {
       const res = await api.get("/users");
-      const users = Array.isArray(res.data)
-        ? res.data
-        : Array.isArray(res.data?.users)
-          ? res.data.users
-          : [];
-      setAdmins(users);
+      setAdmins(res.data?.users || []);
     } catch (err) {
       setAdmins([]);
     }
@@ -70,7 +64,6 @@ const SuperAdminPanel = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        // If password is submitted blank during edit, backend should ignore it
         await api.put(`/users/${editingId}`, formData);
       } else {
         await api.post("/users", { ...formData, role: "admin" });

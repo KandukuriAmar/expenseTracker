@@ -42,11 +42,7 @@ const Dashboard = () => {
         ? `/transactions?type=${filter.toLowerCase()}`
         : "/transactions";
       const txnRes = await api.get(endpoint);
-      const transactionsData = Array.isArray(txnRes.data)
-        ? txnRes.data
-        : Array.isArray(txnRes.data?.transactions)
-          ? txnRes.data.transactions
-          : [];
+      const transactionsData = txnRes.data?.transactions || [];
       setTransactions(transactionsData);
     } catch (err) {
       setSummary({ income: 0, expense: 0, balance: 0 });
