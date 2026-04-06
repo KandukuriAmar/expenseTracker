@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import api from "../api/axios";
 import { Wallet, Search, Edit3, Trash2, Filter } from "lucide-react";
 import "../styles/Dashboard.css";
-  
+
 const AllTransactions = () => {
   const [transactions, setTransactions] = useState([]);
   const [admins, setAdmins] = useState([]);
@@ -20,27 +20,28 @@ const AllTransactions = () => {
   });
   const [filter, setFilter] = useState("");
 
-  const applyFilter = async () => {
-      try {
-        let url = "/transactions?";
-        
-        if (filter) {
-          url += `type=${filter.toLowerCase()}&`;
-          console.log("Applying filter for type:", url);
-        } if (selectedUserId) {
-          url += `userId=${selectedUserId}`;
-          console.log("Applying filter for type:", url);
-        }
-        const res = await api.get(url);
+  const applyFilter = useCallback(async () => {
+    try {
+      let url = "/transactions?";
+
+      if (filter) {
+        url += `type=${filter.toLowerCase()}&`;
         console.log("Applying filter for type:", url);
-        setTransactions(res.data.transactions || []);
-      } catch (err) {
-        console.error("Error applying filter", err);
       }
-    };
+      if (selectedUserId) {
+        url += `userId=${selectedUserId}`;
+        console.log("Applying filter for type:", url);
+      }
+      const res = await api.get(url);
+      console.log("Applying filter for type:", url);
+      setTransactions(res.data.transactions || []);
+    } catch (err) {
+      console.error("Error applying filter", err);
+    }
+  }, [filter, selectedUserId]);
   useEffect(() => {
     applyFilter();
-  }, [filter, selectedUserId]);
+  }, [applyFilter]);
 
   const fetchAdmins = useCallback(async () => {
     try {
@@ -165,21 +166,21 @@ const AllTransactions = () => {
             />
           </div>
           <div className="filter-container">
-          <div className="filter-section mt-2rem">
-            <Filter size={18} color="var(--text-secondary)" />
-            <select
-              className="form-input filter-select"
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-            >
-              <option value="">All Types</option>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-            </select>
+            <div className="filter-section mt-2rem">
+              <Filter size={18} color="var(--text-secondary)" />
+              <select
+                className="form-input filter-select"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <option value="">All Types</option>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
+            </div>
           </div>
         </div>
-        </div>
-        </div>
+      </div>
       <div
         className="glass-panel"
         style={{ padding: "1.5rem", overflow: "hidden" }}
@@ -385,3 +386,5 @@ const AllTransactions = () => {
 };
 
 export default AllTransactions;
+
+

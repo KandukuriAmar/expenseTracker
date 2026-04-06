@@ -1,15 +1,13 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import {sequelize, connectDB} from './db/DBConfig.js';
-import Users from './models/Admin.js';
-import Transactions from './models/Transactions.js';
-import dotenv from 'dotenv';
-import authRouter from './Routes/authRouter.js';
-import userRouter from './Routes/userRouter.js';
-import transactionRouter from './Routes/transactionRouter.js';
-import cookieParser from 'cookie-parser';
-import corsMiddleware from './middlewares/cors.js';
-import seedSuperAdmin from './seedSuperAdmin.js';
+import express from "express";
+import bodyParser from "body-parser";
+import { sequelize, connectDB } from "./db/DBConfig.js";
+import dotenv from "dotenv";
+import authRouter from "./Routes/authRouter.js";
+import userRouter from "./Routes/userRouter.js";
+import transactionRouter from "./Routes/transactionRouter.js";
+import cookieParser from "cookie-parser";
+import corsMiddleware from "./middlewares/cors.js";
+import seedSuperAdmin from "./seedSuperAdmin.js";
 
 dotenv.config();
 
@@ -24,7 +22,7 @@ app.use(corsMiddleware);
   try {
     await connectDB();
     await sequelize.sync({ alter: true });
-    seedSuperAdmin();
+    await seedSuperAdmin();
     console.log("Database synced successfully.");
   } catch (error) {
     console.error("Error syncing database:", error);

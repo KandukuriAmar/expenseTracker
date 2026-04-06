@@ -1,7 +1,11 @@
 import Users from "../models/Admin.js";
 import bcrypt from "bcrypt";
+import type { Request, Response } from "express";
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (
+  _req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
     const users = await Users.findAll({
       where: { role: "admin" },
@@ -16,7 +20,10 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-const addUser = async (req, res) => {
+const addUser = async (
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   const { name, email, password, role } = req.body;
   try {
     if (!name || !email || !password) {
@@ -45,13 +52,16 @@ const addUser = async (req, res) => {
   }
 };
 
-const deleteUserById = async (req, res) => {
-  const userId = req.params.id;
+const deleteUserById = async (
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
+  const userId = String(req.params.id);
   try {
     const isExsitUser = await Users.findByPk(userId);
     if (!isExsitUser) {
       return res.status(400).json({ message: "User not found" });
-    } else if (isExsitUser.role === "superadmin") {
+    } else if (String(isExsitUser.get("role")) === "superadmin") {
       return res
         .status(403)
         .json({ message: "Cannot delete superadmin account" });
@@ -66,7 +76,10 @@ const deleteUserById = async (req, res) => {
   }
 };
 
-const deleteUserByEmail = async (req, res) => {
+const deleteUserByEmail = async (
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   const { email } = req.params;
   try {
     const isExsitUser = await Users.findOne({ where: { email } });
@@ -83,27 +96,30 @@ const deleteUserByEmail = async (req, res) => {
   }
 };
 
-const updateUserById = async (req, res) => {
+const updateUserById = async (
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
-    const userId = req.params.id;
+    const userId = String(req.params.id);
     const { name, email, password, role } = req.body;
     const isExsitUser = await Users.findByPk(userId);
     if (!isExsitUser) {
       return res.status(400).json({ message: "User not found" });
-    } else if (isExsitUser.role === "superadmin") {
+    } else if (String(isExsitUser.get("role")) === "superadmin") {
       return res
         .status(403)
         .json({ message: "Cannot edit superadmin account from this endpoint" });
     } else {
-      const updatePayload = {};
+      const updatePayload: Record<string, string> = {};
 
       if (name) {
         updatePayload.name = name;
       }
 
-      if (email && email !== isExsitUser.email) {
+      if (email && email !== String(isExsitUser.get("email"))) {
         const emailTaken = await Users.findOne({ where: { email } });
-        if (emailTaken && String(emailTaken.id) !== String(userId)) {
+        if (emailTaken && String(emailTaken.get("id")) !== String(userId)) {
           return res.status(400).json({ message: "Email already in use" });
         }
         updatePayload.email = email;
@@ -131,20 +147,23 @@ const updateUserById = async (req, res) => {
   }
 };
 
-const toggleUserStatusById = async (req, res) => {
+const toggleUserStatusById = async (
+  req: Request,
+  res: Response,
+): Promise<Response | void> => {
   try {
-    const userId = req.params.id;
+    const userId = String(req.params.id);
     const isExsitUser = await Users.findByPk(userId);
     if (!isExsitUser) {
       return res.status(400).json({ message: "User not found" });
-    } else if (isExsitUser.role === "superadmin") {
+    } else if (String(isExsitUser.get("role")) === "superadmin") {
       return res
         .status(403)
         .json({ message: "Cannot change superadmin status" });
     } else {
       await Users.update(
         {
-          isActive: !isExsitUser.isActive,
+          isActive: !Boolean(isExsitUser.get("isActive")),
         },
         { where: { id: userId } },
       );

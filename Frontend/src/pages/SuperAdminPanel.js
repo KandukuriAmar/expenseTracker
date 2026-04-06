@@ -114,7 +114,7 @@ const SuperAdminPanel = () => {
                       <span
                         className={`badge ${admin.isActive ? "badge-active" : "badge-inactive"}`}
                       >
-                        {admin.isActive ? "Active" : "Suspended"}
+                        {admin.isActive ? "Active" : "InActive"}
                       </span>
                     </td>
                     <td>{new Date(admin.createdAt).toLocaleDateString()}</td>
