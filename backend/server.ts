@@ -8,6 +8,7 @@ import transactionRouter from "./Routes/transactionRouter.js";
 import cookieParser from "cookie-parser";
 import corsMiddleware from "./middlewares/cors.js";
 import seedSuperAdmin from "./seedSuperAdmin.js";
+import PasswordResetRequest from "./models/PasswordResetRequest.js";
 
 dotenv.config();
 
