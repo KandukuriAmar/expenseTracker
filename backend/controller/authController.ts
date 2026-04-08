@@ -7,37 +7,45 @@ const registerController = async (
   req: Request,
   res: Response,
 ): Promise<Response | void> => {
-  const { name, email, password, role } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, 10);
+  try {
+    const { name, email, password, role } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 10);
 
-  const isExsitUser = await Users.findOne({ where: { email } });
-  if (isExsitUser) {
-    return res.status(400).json({ message: "User already exists" });
-  } else {
-    const isActive = role === "superadmin" ? true : false;
-    const newUser = await Users.create({
-      name,
-      email,
-      password: hashedPassword,
-      role,
-      isActive,
-    });
+    const isExsitUser = await Users.findOne({ where: { email } });
+    if (isExsitUser) {
+      return res.status(400).json({ message: "User already exists" });
+    } else {
+      const isActive = role === "superadmin" ? true : false;
+      const newUser = await Users.create({
+        name,
+        email,
+        password: hashedPassword,
+        role,
+        isActive,
+      });
 
-    const token = jwt.sign(
-      { id: Number(newUser.get("id")), email },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "1h",
-      },
-    );
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-    });
-    res
-      .status(200)
-      .json({ message: "User registered successfully", token, user: newUser });
+      const token = jwt.sign(
+        { id: Number(newUser.get("id")), email },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        },
+      );
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+      });
+      res
+        .status(200)
+        .json({
+          message: "User registered successfully",
+          token,
+          user: newUser,
+        });
+    }
+  } catch (err: unknown) {
+    res.status(500).json("Error while registration: " + String(err));
   }
 };
 const loginController = async (
