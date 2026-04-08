@@ -1,12 +1,8 @@
 import Transactions from "../models/Transactions.js";
-import { Op } from "sequelize";
 import type { Request, Response } from "express";
 import Users from "../models/Admin.js";
 
-const getAllTransactionsorfilterByType = async (
-  req: Request,
-  res: Response,
-): Promise<Response | void> => {
+const getAllTransactionsorfilterByType = async (req: Request, res: Response): Promise<Response | void> => {
   try {
     const type = req.query.type;
     const useridByQuery = req.query.userId;
@@ -18,7 +14,7 @@ const getAllTransactionsorfilterByType = async (
     const role = req.user.role;
     console.log("came to get transactions with query: ", type, useridByQuery);
 
-    let transactions;
+    let transactions: any;
 
     if (role === "superadmin") {
       if (type && useridByQuery) {
@@ -41,16 +37,11 @@ const getAllTransactionsorfilterByType = async (
           include: [{ model: Users, attributes: ["name"] }],
         });
       }
-      return res.status(200).json({
-        message: "Transactions fetched successfully",
-        transactions,
-      });
+      return res.status(200).json({ message: "Transactions fetched successfully", transactions});
     }
 
     if (type) {
-      transactions = await Transactions.findAll({
-        where: { type: String(type), userId },
-      });
+      transactions = await Transactions.findAll({ where: { type: String(type), userId }});
     } else {
       transactions = await Transactions.findAll({ where: { userId } });
     }
@@ -92,9 +83,7 @@ const getTransactionSummary = async (
     }
     const transactions = await Transactions.findAll({ where: { userId } });
     if (transactions.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No transactions found for this user" });
+      return res.status(404).json({ message: "No transactions found for this user" });
     }
     const totalIncome = await Transactions.sum("amount", {
       where: { type: "income", userId },
@@ -103,11 +92,8 @@ const getTransactionSummary = async (
       where: { type: "expense", userId },
     });
     const balance = totalIncome - totalExpense;
-    res.status(200).json({
-      message: "Transaction summary fetched successfully",
-      summary: { totalIncome, totalExpense, balance },
-    });
-  } catch (err) {
+    res.status(200).json({ message: "Transaction summary fetched successfully", summary: { totalIncome, totalExpense, balance }});
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -136,7 +122,7 @@ const createTransaction = async (
       message: "Transaction created successfully",
       transaction: newTransaction,
     });
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -165,10 +151,8 @@ const updateTransaction = async (
         .json({ message: "Not authorized to update this transaction" });
     }
     await transaction.update({ title, amount, type, category, date, note });
-    res
-      .status(200)
-      .json({ message: "Transaction updated successfully", transaction });
-  } catch (err) {
+    res.status(200).json({ message: "Transaction updated successfully", transaction });
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -197,20 +181,15 @@ const deleteTransaction = async (
     }
     await transaction.destroy();
     res.status(200).json({ message: "Transaction deleted successfully" });
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
 
-const getTransactionSummaryById = async (
-  req: Request,
-  res: Response,
-): Promise<Response | void> => {
+const getTransactionSummaryById = async (req: Request, res: Response): Promise<Response | void> => {
   try {
     const userId = Number(req.params.id);
-    const transactions = await Transactions.findAll({
-      where: { userId },
-    });
+    const transactions = await Transactions.findAll({where: { userId }});
     if (!transactions || transactions.length === 0) {
       return res.status(404).json({ message: "Transaction not found" });
     }
@@ -225,7 +204,7 @@ const getTransactionSummaryById = async (
       message: "Transaction summary fetched successfully",
       summary: { totalincome, totalExpense, balance },
     });
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -237,4 +216,4 @@ export {
   createTransaction,
   updateTransaction,
   deleteTransaction,
-};
+}; 

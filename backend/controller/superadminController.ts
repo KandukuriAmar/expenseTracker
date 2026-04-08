@@ -12,10 +12,8 @@ const getAllUsers = async (
       attributes: { exclude: ["password"] },
       order: [["createdAt", "DESC"]],
     });
-    res
-      .status(200)
-      .json({ message: "Users fetched successfully by superadmin", users });
-  } catch (err) {
+    res.status(200).json({ message: "Users fetched successfully by superadmin", users });
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -27,9 +25,7 @@ const addUser = async (
   const { name, email, password, role } = req.body;
   try {
     if (!name || !email || !password) {
-      return res
-        .status(400)
-        .json({ message: "Name, email and password are required" });
+      return res.status(400).json({ message: "Name, email and password are required" });
     }
     const isExsitUser = await Users.findOne({ where: { email } });
     if (isExsitUser) {
@@ -42,12 +38,9 @@ const addUser = async (
         password: hashedPassword,
         role: role || "admin",
       });
-      res.status(200).json({
-        message: "User added successfully by superadmin",
-        user: newUser,
-      });
+      res.status(200).json({ message: "User added successfully by superadmin", user: newUser});
     }
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -62,16 +55,14 @@ const deleteUserById = async (
     if (!isExsitUser) {
       return res.status(400).json({ message: "User not found" });
     } else if (String(isExsitUser.get("role")) === "superadmin") {
-      return res
-        .status(403)
-        .json({ message: "Cannot delete superadmin account" });
+      return res.status(403).json({ message: "Cannot delete superadmin account" });
     } else {
       await Users.destroy({ where: { id: userId } });
       res
         .status(200)
         .json({ message: "User deleted successfully by superadmin" });
     }
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -91,7 +82,7 @@ const deleteUserByEmail = async (
         .status(200)
         .json({ message: "User deleted successfully by superadmin" });
     }
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -107,9 +98,7 @@ const updateUserById = async (
     if (!isExsitUser) {
       return res.status(400).json({ message: "User not found" });
     } else if (String(isExsitUser.get("role")) === "superadmin") {
-      return res
-        .status(403)
-        .json({ message: "Cannot edit superadmin account from this endpoint" });
+      return res.status(403).json({ message: "Cannot edit superadmin account from this endpoint" });
     } else {
       const updatePayload: Record<string, string> = {};
 
@@ -142,7 +131,7 @@ const updateUserById = async (
         .status(200)
         .json({ message: "User updated successfully by superadmin" });
     }
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
@@ -171,7 +160,7 @@ const toggleUserStatusById = async (
         .status(200)
         .json({ message: "User status toggled successfully by superadmin" });
     }
-  } catch (err) {
+  } catch (err: unknown) {
     res.status(500).json({ message: "Internal server error: ", err });
   }
 };
