@@ -103,9 +103,7 @@ const AdminPanel = () => {
             <tbody>
               {users.map((user) => (
                 <tr key={user.id || user._id}>
-                  <td>{user.name}</td>
-                  <td>{user.email}</td>
-                  <td>{user.isActive ? "Active" : "Suspended"}</td>
+                  <td>{user.isActive ? "Active" : "InActive"}</td>
                   <td>{new Date(user.createdAt).toLocaleString()}</td>
                   <td className="admin-table-actions-center">
                     <button

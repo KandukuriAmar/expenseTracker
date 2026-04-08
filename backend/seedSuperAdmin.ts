@@ -9,8 +9,8 @@ export default async function seedSuperAdmin() {
   try {
     await sequelize.sync();
 
-    const email = process.env.seedemail ;
-    const password = process.env.seedpassword ;
+    const email = process.env.seedemail;
+    const password = process.env.seedpassword;
     const name = process.env.seedname;
     const role = "superadmin";
 
@@ -36,8 +36,9 @@ export default async function seedSuperAdmin() {
     });
 
     console.log("Superadmin seeded successfully.");
-  } catch (error) {
-    console.error("Seeding failed:", error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.error("Seeding failed:", message);
     throw error;
   }
 }
