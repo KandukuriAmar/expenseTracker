@@ -1,8 +1,13 @@
-
+import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/AuthContext.tsx';
 
-const PrivateRoute = ({ children, requiredRole }) => {
+interface PrivateRouteProps {
+  children: React.ReactNode;
+  requiredRole?: string;
+}
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, requiredRole }) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -17,7 +22,7 @@ const PrivateRoute = ({ children, requiredRole }) => {
     return <Navigate to="/" replace />;
   }
 
-  return children;
+  return <>{children}</>;
 };
 
 export default PrivateRoute;

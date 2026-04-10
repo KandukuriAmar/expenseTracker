@@ -42,3 +42,4 @@ export default async function seedSuperAdmin() {
     throw error;
   }
 }
+ 

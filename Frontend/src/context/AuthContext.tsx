@@ -1,12 +1,32 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import api from "../api/axios";
+import api from "../api/axios.ts";
 
-export const AuthContext = createContext();
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+}
 
-export const useAuth = () => useContext(AuthContext);
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  login: (email: string, password: string) => Promise<boolean>;
+  logout: () => Promise<void>;
+}
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within AuthProvider");
+  }
+  return context;
+};
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
       await api.post(
         "/auth/login",
@@ -40,8 +60,7 @@ export const AuthProvider = ({ children }) => {
 
       setUser(meRes.data?.user || null);
       return true;
-    } catch (error) {
-      console.error("Login failed", error);
+    } catch (error: any) {
       throw error.response?.data?.message || "Login failed";
     }
   };

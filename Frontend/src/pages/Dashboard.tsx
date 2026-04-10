@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import api from "../api/axios";
+import api from "../api/axios.ts";
 import {
   Plus,
   Edit2,
@@ -11,15 +11,41 @@ import {
 } from "lucide-react";
 import "../styles/Dashboard.css";
 
+interface Transaction {
+  _id?: string;
+  id?: string;
+  title: string;
+  amount: number;
+  type: string;
+  category: string;
+  date: string;
+  note?: string;
+}
+
+interface Summary {
+  income: number;
+  expense: number;
+  balance: number;
+}
+
+interface FormData {
+  title: string;
+  amount: string;
+  type: string;
+  category: string;
+  date: string;
+  note: string;
+}
+
 const Dashboard = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [summary, setSummary] = useState({ income: 0, expense: 0, balance: 0 });
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [summary, setSummary] = useState<Summary>({ income: 0, expense: 0, balance: 0 });
   const [filter, setFilter] = useState("");
 
   const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     amount: "",
     type: "Expense",
@@ -54,12 +80,12 @@ const Dashboard = () => {
     fetchData();
   }, [fetchData]);
 
-  const handleOpenModal = (txn = null) => {
+  const handleOpenModal = (txn: Transaction | null = null) => {
     if (txn) {
-      setEditingId(txn._id || txn.id);
+      setEditingId(txn._id || txn.id || null);
       setFormData({
         title: txn.title,
-        amount: txn.amount,
+        amount: String(txn.amount),
         type: txn.type,
         category: txn.category,
         date: new Date(txn.date).toISOString().split("T")[0],
@@ -79,7 +105,7 @@ const Dashboard = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this transaction?")) {
       try {
         await api.delete(`/transactions/${id}`);
@@ -90,26 +116,26 @@ const Dashboard = () => {
     }
   };
 
-  const handleFormSubmit = async (e) => {
-  e.preventDefault();
-  const today = new Date().toISOString().split("T")[0];
-  if (formData.date > today) {
-    alert("Future dates are not allowed");
-    return;
-  }
-  try {
-    const payload = {...formData,amount: Number(formData.amount)};
-    if (editingId) {
-      await api.put(`/transactions/${editingId}`, payload);
-    } else {
-      await api.post("/transactions", payload);
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const today = new Date().toISOString().split("T")[0];
+    if (formData.date > today) {
+      alert("Future dates are not allowed");
+      return;
     }
-    setShowModal(false);
-    fetchData();
-  } catch (err) {
-    alert(err.response?.data?.message || "Error saving transaction");
-  }
-};
+    try {
+      const payload = {...formData, amount: Number(formData.amount)};
+      if (editingId) {
+        await api.put(`/transactions/${editingId}`, payload);
+      } else {
+        await api.post("/transactions", payload);
+      }
+      setShowModal(false);
+      fetchData();
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Error saving transaction");
+    }
+  };
 
   return (
     <div className="dashboard-container">
@@ -227,7 +253,7 @@ const Dashboard = () => {
                             color: "#dc2626",
                             borderColor: "rgba(239, 68, 68, 0.2)",
                           }}
-                          onClick={() => handleDelete(t._id || t.id)}
+                          onClick={() => handleDelete(t._id || t.id || "")}
                         >
                           <Trash2 size={16} />
                         </button>
@@ -238,7 +264,7 @@ const Dashboard = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="6"
+                    colSpan={6}
                     className="text-center"
                     style={{
                       padding: "2rem",
@@ -378,7 +404,7 @@ const Dashboard = () => {
                 <textarea
                   id="note"
                   className="form-input"
-                  rows="2"
+                  rows={2}
                   value={formData.note}
                   onChange={(e) =>
                     setFormData({ ...formData, note: e.target.value })

@@ -36,3 +36,4 @@ app.use("/api/transactions", transactionRouter);
 app.listen(PORT, () =>
   console.log(`Server is running at http://localhost:${PORT}`),
 );
+

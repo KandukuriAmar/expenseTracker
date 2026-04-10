@@ -1,12 +1,35 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import api from "../api/axios";
+import api from "../api/axios.ts";
 import { Users, UserCheck, ReceiptText } from "lucide-react";
 import "../styles/Dashboard.css";
 
+interface Admin {
+  id?: string;
+  _id?: string;
+  name: string;
+  email: string;
+  isActive: boolean;
+}
+
+interface Transaction {
+  id?: string;
+  _id?: string;
+  date: string;
+  title: string;
+  category: string;
+  type: string;
+  amount: number;
+  userId: string;
+  doneByName?: string;
+  user?: { name: string };
+  User?: { name: string };
+  Users?: { name: string };
+}
+
 const SuperAdminDashboard = () => {
-  const [admins, setAdmins] = useState([]);
-  const [transactions, setTransactions] = useState([]);
+  const [admins, setAdmins] = useState<Admin[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [totalTransactionsCount, setTotalTransactionsCount] = useState(0);
 
   useEffect(() => {
@@ -40,9 +63,6 @@ const SuperAdminDashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-action-bar mb-1-5rem">
         <h2>Superadmin Dashboard</h2>
-        {/* <Link to="/superadmin" className="btn btn-outline">
-          Manage Admins
-        </Link> */}
       </div>
 
       <div className="grid-auto-fit mb-1-5rem">
@@ -143,7 +163,7 @@ const SuperAdminDashboard = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="6"
+                    colSpan={6}
                     className="text-center"
                     style={{ padding: "2rem" }}
                   >

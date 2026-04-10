@@ -5,17 +5,17 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import { useAuth } from "./context/AuthContext";
-import Navbar from "./components/Navbar";
-import PrivateRoute from "./components/PrivateRoute";
+import { AuthProvider } from "./context/AuthContext.tsx";
+import { useAuth } from "./context/AuthContext.tsx";
+import Navbar from "./components/Navbar.tsx";
+import PrivateRoute from "./components/PrivateRoute.tsx";
 import "./styles/utilities.css";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import SuperAdminDashboard from "./pages/SuperAdminDashboard";
-import SuperAdminPanel from "./pages/SuperAdminPanel";
-import AllTransactions from "./pages/AllTransactions";
+import Login from "./pages/Login.tsx";
+import Register from "./pages/Register.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
+import SuperAdminDashboard from "./pages/SuperAdminDashboard.tsx";
+import SuperAdminPanel from "./pages/SuperAdminPanel.tsx";
+import AllTransactions from "./pages/AllTransactions.tsx";
 
 function FallbackRoute() {
   const { user, loading } = useAuth();

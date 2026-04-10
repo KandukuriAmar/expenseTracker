@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "../api/axios";
+import axios from "../api/axios.ts";
 import { useNavigate } from "react-router-dom";
 import { UserPlus } from "lucide-react";
 import "../styles/Register.css";
@@ -10,11 +10,11 @@ const Register = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -32,7 +32,7 @@ const Register = () => {
       setTimeout(() => {
         navigate("/login");
       }, 2000);
-    } catch (err) {
+    } catch (err: any) {
       setError(err.response?.data?.message || "Registration failed");
     }
   };

@@ -1,16 +1,47 @@
 import React, { useState, useEffect, useCallback } from "react";
-import api from "../api/axios";
+import api from "../api/axios.ts";
 import { Wallet, Search, Edit3, Trash2, Filter } from "lucide-react";
 import "../styles/Dashboard.css";
 
+interface Transaction {
+  _id?: string;
+  id?: string;
+  title: string;
+  amount: number;
+  type: string;
+  category: string;
+  date: string;
+  note?: string;
+  userId: string;
+  doneByName?: string;
+  user?: { name: string };
+  User?: { name: string };
+  Users?: { name: string };
+}
+
+interface Admin {
+  id?: string;
+  name: string;
+  email: string;
+}
+
+interface FormData {
+  title: string;
+  amount: string;
+  type: string;
+  category: string;
+  date: string;
+  note: string;
+}
+
 const AllTransactions = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [admins, setAdmins] = useState([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [admins, setAdmins] = useState<Admin[]>([]);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     amount: "",
     type: "Expense",
@@ -26,19 +57,17 @@ const AllTransactions = () => {
 
       if (filter) {
         url += `type=${filter.toLowerCase()}&`;
-        console.log("Applying filter for type:", url);
       }
       if (selectedUserId) {
         url += `userId=${selectedUserId}`;
-        console.log("Applying filter for type:", url);
       }
       const res = await api.get(url);
-      console.log("Applying filter for type:", url);
       setTransactions(res.data.transactions || []);
     } catch (err) {
       console.error("Error applying filter", err);
     }
   }, [filter, selectedUserId]);
+  
   useEffect(() => {
     applyFilter();
   }, [applyFilter]);
@@ -56,11 +85,11 @@ const AllTransactions = () => {
     fetchAdmins();
   }, [fetchAdmins]);
 
-  const handleOpenModal = (txn) => {
-    setEditingId(txn._id || txn.id);
+  const handleOpenModal = (txn: Transaction) => {
+    setEditingId(txn._id || txn.id || null);
     setFormData({
       title: txn.title || "",
-      amount: txn.amount || "",
+      amount: String(txn.amount) || "",
       type: txn.type || "Expense",
       category: txn.category || "",
       date: txn.date
@@ -71,19 +100,19 @@ const AllTransactions = () => {
     setShowModal(true);
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this transaction?")) {
       return;
     }
     try {
       await api.delete(`/transactions/${id}`);
       applyFilter();
-    } catch (err) {
+    } catch (err: any) {
       alert(err.response?.data?.message || "Failed to delete transaction");
     }
   };
 
-  const handleFormSubmit = async (e) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingId) {
       return;
@@ -96,7 +125,7 @@ const AllTransactions = () => {
       setShowModal(false);
       setEditingId(null);
       applyFilter();
-    } catch (err) {
+    } catch (err: any) {
       alert(err.response?.data?.message || "Failed to update transaction");
     }
   };
@@ -237,7 +266,7 @@ const AllTransactions = () => {
                             color: "#dc2626",
                             borderColor: "rgba(239, 68, 68, 0.2)",
                           }}
-                          onClick={() => handleDelete(t._id || t.id)}
+                          onClick={() => handleDelete(t._id || t.id || "")}
                           title="Delete transaction"
                         >
                           <Trash2 size={16} />
@@ -249,7 +278,7 @@ const AllTransactions = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="7"
+                    colSpan={7}
                     className="text-center"
                     style={{
                       padding: "2rem",
@@ -386,5 +415,3 @@ const AllTransactions = () => {
 };
 
 export default AllTransactions;
-
-
